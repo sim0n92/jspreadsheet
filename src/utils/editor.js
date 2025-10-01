@@ -17,6 +17,11 @@ export const openEditor = function (cell, empty, e) {
     const y = cell.getAttribute('data-y');
     const x = cell.getAttribute('data-x');
 
+    // Hide corner when editing in autoWrapRows mode
+    if (obj.options.autoWrapRows === true && obj.corner) {
+        obj.corner.style.display = 'none';
+    }
+
     // On edition start
     dispatch.call(obj, 'oneditionstart', obj, cell, parseInt(x), parseInt(y));
 
@@ -411,6 +416,11 @@ export const closeEditor = function (cell, save) {
 
     // Remove editor class
     cell.classList.remove('editor');
+
+    // Show corner again when editing ends in autoWrapRows mode
+    if (obj.options.autoWrapRows === true && obj.corner && obj.options.selectionCopy !== false) {
+        obj.corner.style.display = '';
+    }
 
     // Finish edition
     obj.edition = null;
