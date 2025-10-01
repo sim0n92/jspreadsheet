@@ -557,6 +557,45 @@ export const setHeight = function (row, height, oldHeight) {
 };
 
 /**
+ * Auto adjust row height based on content when autoWrapRows is enabled
+ */
+export const autoAdjustRowHeight = function (row) {
+    const obj = this;
+
+    if (obj.options.autoWrapRows !== true) {
+        return;
+    }
+
+    // Get the maximum height needed for any cell in this row
+    let maxHeight = 0;
+
+    for (let i = 0; i < obj.options.columns.length; i++) {
+        if (obj.records[row] && obj.records[row][i]) {
+            const cell = obj.records[row][i].element;
+            // Temporarily remove height to measure natural height
+            const oldHeight = cell.parentElement.style.height;
+            cell.parentElement.style.height = 'auto';
+
+            const cellHeight = cell.scrollHeight;
+            if (cellHeight > maxHeight) {
+                maxHeight = cellHeight;
+            }
+
+            // Restore old height
+            cell.parentElement.style.height = oldHeight;
+        }
+    }
+
+    // Add some padding (minimum height)
+    maxHeight = Math.max(maxHeight + 4, 24);
+
+    // Update row height
+    if (obj.rows[row]) {
+        obj.rows[row].element.style.height = maxHeight + 'px';
+    }
+};
+
+/**
  * Show row
  */
 export const showRow = function (rowNumber) {

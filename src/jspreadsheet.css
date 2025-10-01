@@ -152,6 +152,17 @@
     cursor: move;
 }
 
+.jss_worksheet.auto-wrap-rows {
+    white-space: normal;
+}
+
+.jss_worksheet.auto-wrap-rows > tbody > tr > td {
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    vertical-align: top;
+}
+
 .jss_worksheet > tbody > tr.dragging > td {
     background-color: #eee;
     opacity: 0.5;

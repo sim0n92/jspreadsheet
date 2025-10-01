@@ -30,7 +30,7 @@ import {
     selectAll,
     updateSelectionFromCoords,
 } from './selection.js';
-import { deleteRow, getHeight, getRowData, hideRow, insertRow, moveRow, setHeight, setRowData, showRow } from './rows.js';
+import { autoAdjustRowHeight, deleteRow, getHeight, getRowData, hideRow, insertRow, moveRow, setHeight, setRowData, showRow } from './rows.js';
 import { destroyMerge, getMerge, removeMerge, setMerge } from './merges.js';
 import { resetSearch, search } from './search.js';
 import { getHeader, getHeaders, setHeader } from './headers.js';
@@ -286,7 +286,13 @@ const createTable = function () {
     if (obj.options.rowDrag != false) {
         obj.tbody.classList.add('draggable');
     }
-    if (obj.options.rowResize != false) {
+
+    // Auto wrap rows feature - disables manual row resize and enables automatic height
+    if (obj.options.autoWrapRows === true) {
+        obj.table.classList.add('auto-wrap-rows');
+        // Disable manual row resize when autoWrapRows is enabled
+        obj.options.rowResize = false;
+    } else if (obj.options.rowResize != false) {
         obj.tbody.classList.add('resizable');
     }
 
@@ -627,6 +633,12 @@ const worksheetPublicMethods = [
         'setHeight',
         function (row, height) {
             return setHeight.call(this, row, height);
+        },
+    ],
+    [
+        'autoAdjustRowHeight',
+        function (row) {
+            return autoAdjustRowHeight.call(this, row);
         },
     ],
     ['getMerge', getMerge],

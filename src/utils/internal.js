@@ -698,6 +698,11 @@ export const updateCell = function (x, y, value, force) {
 
         // On change
         dispatch.call(obj, 'onchange', obj, obj.records[y] && obj.records[y][x] ? obj.records[y][x].element : null, x, y, value, record.oldValue);
+
+        // Auto adjust row height if autoWrapRows is enabled
+        if (obj.options.autoWrapRows === true && obj.autoAdjustRowHeight) {
+            obj.autoAdjustRowHeight(y);
+        }
     }
 
     return record;
