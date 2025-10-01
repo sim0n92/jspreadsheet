@@ -237,7 +237,9 @@ export const openEditor = function (cell, empty, e) {
 
                 if (
                     (!obj.options.columns || !obj.options.columns[x] || obj.options.columns[x].wordWrap != false) &&
-                    (obj.options.wordWrap == true || obj.options.autoWrapRows == true || (obj.options.columns && obj.options.columns[x] && obj.options.columns[x].wordWrap == true))
+                    (obj.options.wordWrap == true ||
+                        obj.options.autoWrapRows == true ||
+                        (obj.options.columns && obj.options.columns[x] && obj.options.columns[x].wordWrap == true))
                 ) {
                     editor = createEditor('textarea');
                 } else {
