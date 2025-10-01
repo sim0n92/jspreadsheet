@@ -163,6 +163,13 @@
     vertical-align: top;
 }
 
+.jss_worksheet.auto-wrap-rows > tbody > tr > td > textarea {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    padding: 4px !important;
+}
+
 .jss_worksheet > tbody > tr.dragging > td {
     background-color: #eee;
     opacity: 0.5;

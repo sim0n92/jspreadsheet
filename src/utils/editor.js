@@ -25,18 +25,33 @@ export const openEditor = function (cell, empty, e) {
         obj.records[y][x - 1].element.style.overflow = 'hidden';
     }
 
-    // Create editor
+    /**
+     * Create editor element (input or textarea) for cell editing
+     *
+     * @param {string} type - Element type ('input' or 'textarea')
+     * @return {HTMLElement} The created editor element
+     */
     const createEditor = function (type) {
-        // Cell information
         const info = cell.getBoundingClientRect();
-
-        // Create dropdown
         const editor = document.createElement(type);
-        editor.style.width = info.width + 'px';
-        editor.style.height = info.height - 2 + 'px';
-        editor.style.minHeight = info.height - 2 + 'px';
 
-        // Edit cell
+        // Configure textarea for auto-wrapping rows
+        if (type === 'textarea' && obj.options.autoWrapRows === true) {
+            editor.style.width = '100%';
+            editor.style.minHeight = info.height - 2 + 'px';
+            editor.style.height = 'auto';
+            editor.style.resize = 'none';
+            editor.style.overflow = 'hidden';
+            editor.style.whiteSpace = 'pre-wrap';
+            editor.style.wordWrap = 'break-word';
+            editor.style.overflowWrap = 'break-word';
+            editor.style.boxSizing = 'border-box';
+        } else {
+            editor.style.width = info.width + 'px';
+            editor.style.height = info.height - 2 + 'px';
+            editor.style.minHeight = info.height - 2 + 'px';
+        }
+
         cell.classList.add('editor');
         cell.innerHTML = '';
         cell.appendChild(editor);
@@ -217,7 +232,7 @@ export const openEditor = function (cell, empty, e) {
 
                 if (
                     (!obj.options.columns || !obj.options.columns[x] || obj.options.columns[x].wordWrap != false) &&
-                    (obj.options.wordWrap == true || (obj.options.columns && obj.options.columns[x] && obj.options.columns[x].wordWrap == true))
+                    (obj.options.wordWrap == true || obj.options.autoWrapRows == true || (obj.options.columns && obj.options.columns[x] && obj.options.columns[x].wordWrap == true))
                 ) {
                     editor = createEditor('textarea');
                 } else {
@@ -261,7 +276,34 @@ export const openEditor = function (cell, empty, e) {
                 editor.onblur = function () {
                     closeEditor.call(obj, cell, true);
                 };
-                editor.scrollLeft = editor.scrollWidth;
+
+                // Setup auto-resize for textarea when autoWrapRows is enabled
+                if (obj.options.autoWrapRows === true && editor.tagName === 'TEXTAREA') {
+                    let lastHeight = editor.scrollHeight;
+
+                    const adjustHeight = function () {
+                        const currentScrollHeight = editor.scrollHeight;
+
+                        // Only adjust if height actually changed
+                        if (currentScrollHeight !== lastHeight) {
+                            editor.style.height = 'auto';
+                            editor.style.height = currentScrollHeight + 'px';
+                            lastHeight = currentScrollHeight;
+
+                            if (obj.autoAdjustRowHeight) {
+                                obj.autoAdjustRowHeight(y);
+                            }
+                        }
+                    };
+
+                    // Listen for content changes
+                    editor.addEventListener('input', adjustHeight);
+
+                    // Check initial size after render (but with current height set)
+                    setTimeout(adjustHeight, 0);
+                } else {
+                    editor.scrollLeft = editor.scrollWidth;
+                }
             }
         }
     }

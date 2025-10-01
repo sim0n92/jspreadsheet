@@ -557,42 +557,42 @@ export const setHeight = function (row, height, oldHeight) {
 };
 
 /**
- * Auto adjust row height based on content when autoWrapRows is enabled
+ * Automatically adjust row height based on content when autoWrapRows is enabled.
+ * This function measures the content height of all cells in a row and sets the row height
+ * to accommodate the tallest cell.
+ *
+ * @param {number} row - The row index to adjust
+ * @return {void}
  */
 export const autoAdjustRowHeight = function (row) {
     const obj = this;
 
-    if (obj.options.autoWrapRows !== true) {
+    if (obj.options.autoWrapRows !== true || !obj.rows[row]) {
         return;
     }
 
-    // Get the maximum height needed for any cell in this row
     let maxHeight = 0;
 
+    // Iterate through all columns to find the tallest cell content
     for (let i = 0; i < obj.options.columns.length; i++) {
-        if (obj.records[row] && obj.records[row][i]) {
-            const cell = obj.records[row][i].element;
-            // Temporarily remove height to measure natural height
-            const oldHeight = cell.parentElement.style.height;
-            cell.parentElement.style.height = 'auto';
+        if (!obj.records[row] || !obj.records[row][i]) {
+            continue;
+        }
 
-            const cellHeight = cell.scrollHeight;
-            if (cellHeight > maxHeight) {
-                maxHeight = cellHeight;
-            }
+        const cell = obj.records[row][i].element;
+        const editor = cell.querySelector('textarea');
 
-            // Restore old height
-            cell.parentElement.style.height = oldHeight;
+        // If cell is being edited with textarea, measure editor content
+        if (editor) {
+            maxHeight = Math.max(maxHeight, editor.scrollHeight + 6);
+        } else {
+            // Measure cell content directly
+            maxHeight = Math.max(maxHeight, cell.scrollHeight);
         }
     }
 
-    // Add some padding (minimum height)
-    maxHeight = Math.max(maxHeight + 4, 24);
-
-    // Update row height
-    if (obj.rows[row]) {
-        obj.rows[row].element.style.height = maxHeight + 'px';
-    }
+    // Apply minimum height and update row
+    obj.rows[row].element.style.height = Math.max(maxHeight + 4, 24) + 'px';
 };
 
 /**

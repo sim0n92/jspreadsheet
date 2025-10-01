@@ -287,10 +287,10 @@ const createTable = function () {
         obj.tbody.classList.add('draggable');
     }
 
-    // Auto wrap rows feature - disables manual row resize and enables automatic height
+    // Configure row resizing behavior
     if (obj.options.autoWrapRows === true) {
+        // Enable auto-wrap CSS and disable manual resize
         obj.table.classList.add('auto-wrap-rows');
-        // Disable manual row resize when autoWrapRows is enabled
         obj.options.rowResize = false;
     } else if (obj.options.rowResize != false) {
         obj.tbody.classList.add('resizable');
