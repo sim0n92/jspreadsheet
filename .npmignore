@@ -11,3 +11,6 @@ test
 build.cjs
 mocha.config.cjs
 webpack.config.cjs
+CLAUDE.md
+LARAVEL_INTEGRATION.md
+NPM_PACKAGE_GUIDE.md
