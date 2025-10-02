@@ -50,6 +50,7 @@ import { copy, paste } from './copyPaste.js';
 import { isReadOnly, setReadOnly } from './cells.js';
 import { openFilter, resetFilters } from './filter.js';
 import { redo, undo } from './history.js';
+import { applyAutoWidth } from './autoWidth.js';
 
 const setWorksheetFunctions = function (worksheet) {
     for (let i = 0; i < worksheetPublicMethodsLength; i++) {
@@ -298,6 +299,11 @@ const createTable = function () {
 
     // Load data
     obj.setData.call(obj);
+
+    // Apply auto width if configured
+    if (obj.options.worksheetWidth && obj.options.rowHeaderWidth) {
+        obj.applyAutoWidth();
+    }
 
     // Style
     if (obj.options.style) {
@@ -736,6 +742,7 @@ const worksheetPublicMethods = [
     ['up', up],
     ['openFilter', openFilter],
     ['resetFilters', resetFilters],
+    ['applyAutoWidth', applyAutoWidth],
 ];
 
 const worksheetPublicMethodsLength = worksheetPublicMethods.length;

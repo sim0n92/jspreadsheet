@@ -49,6 +49,8 @@ The following row-related properties are available during spreadsheet initializa
 | `rowResize: boolean`            | Allows the user to resize rows. `Default: true`                                              |
 | `defaultRowHeight: number`      | Sets the default row height.                                                                 |
 | `minSpareRows: number`          | Specifies the number of mandatory blank rows at the end of the spreadsheet. `Default: none.` |
+| `worksheetWidth: number`        | Maximum width of the worksheet in pixels. Used with `rowHeaderWidth` for auto column sizing. |
+| `rowHeaderWidth: number`        | Width of the row header column in pixels. Enables text wrapping in row labels.              |
 
 
 
@@ -292,4 +294,37 @@ export class AppComponent {
     }
 }
 ```
- 
+
+### Auto Column Width Example
+
+When both `worksheetWidth` and `rowHeaderWidth` are configured, the worksheet automatically calculates equal column widths and enables text wrapping in row headers:
+
+```javascript
+jspreadsheet(document.getElementById('spreadsheet'), {
+    worksheets: [{
+        data: [
+            ['US', 'Cheese', 1000, 'Product A' ],
+            ['CA', 'Apples', 1200, 'Product B' ],
+            ['CA', 'Carrots', 2000, 'Product C' ],
+        ],
+        columns: [
+            { title: 'Country', width: 100 },
+            { title: 'Product', width: 150 },
+            { title: 'Quantity', width: 100 },
+            { title: 'Code', width: 100 },
+        ],
+        rows: [
+            { title: 'First Row Label' },
+            { title: 'Another Long Label That Will Wrap' },
+            { title: 'Short' },
+        ],
+        worksheetWidth: 800,    // Max worksheet width
+        rowHeaderWidth: 120,    // Row label column width with wrapping
+    }]
+});
+```
+
+In this example:
+- Worksheet max width is 800px
+- Row header takes 120px (with text wrapping enabled)
+- Remaining 680px is divided equally among 4 data columns (170px each)

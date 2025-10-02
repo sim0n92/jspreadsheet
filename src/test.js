@@ -71,3 +71,36 @@ window.instance2 = jspreadsheet(createSection('Test 2: wordWrap = true (manual r
         },
     ],
 });
+
+// Test 3: Auto Column Width with Row Labels
+window.instance3 = jspreadsheet(createSection('Test 3: Auto Column Width (tableWidth + rowHeaderWidth)'), {
+    tabs: true,
+    toolbar: true,
+    worksheets: [
+        {
+            data: [
+                ['USA', 'Cheese', 1000, 'Product A', '2024-01-01'],
+                ['Canada', 'Apples', 1200, 'Product B', '2024-01-02'],
+                ['Mexico', 'Carrots', 2000, 'Product C', '2024-01-03'],
+                ['Brazil', 'Oranges', 3800, 'Product D', '2024-01-04'],
+                ['Argentina', 'Bananas', 1500, 'Product E', '2024-01-05'],
+            ],
+            columns: [
+                { title: 'Country', width: 100 },
+                { title: 'Product', width: 150 },
+                { title: 'Quantity', width: 100 },
+                { title: 'Code', width: 100 },
+                { title: 'Date', width: 120 },
+            ],
+            rows: [
+                { title: 'First Quarter - January Sales' },
+                { title: 'Q1 - February Report with Very Long Label That Should Wrap' },
+                { title: 'March Data' },
+                { title: 'Second Quarter Summary Report' },
+                { title: 'Q2 Final Results and Analysis' },
+            ],
+            worksheetWidth: 900, // Max worksheet width
+            rowHeaderWidth: 150, // Row label column width with wrapping
+        },
+    ],
+});
